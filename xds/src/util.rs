@@ -15,37 +15,12 @@
  * limitations under the License.
  */
 
-pub mod client;
-pub mod server;
-pub mod protocol;
+use futures::future::BoxFuture;
+use crate::request::ServiceRequest;
+use crate::response::ServiceResponse;
+use crate::error::DBProstError;
 
 
-pub mod request;
-pub mod response;
-pub mod error;
-pub mod util;
+pub type BoxFutureReq<T> = BoxFuture<'static, Result<ServiceRequest<T>, DBProstError>>;
+pub type BoxFutureResp<O> = BoxFuture<'static, Result<ServiceResponse<O>, DBProstError>>;
 
-
-pub use request::*;
-pub use response::*;
-pub use error::*;
-pub use util::*;
-
-
-
-#[cfg(test)]
-mod tests {
-    use crate::client::client::RpcClient;
-    use crate::server::server::RpcServer;
-    use std::net::SocketAddr;
-    #[test]
-    fn it_works() {
-        // RpcClient
-        let client = RpcClient::new(String::from("http://127.0.0.1:8972"));
-
-        // RpcServer
-        let addr = SocketAddr::from(([127, 0, 0, 1], 8972));
-        let server = RpcServer::new(addr);
-        println!("it_works");
-    }
-}
